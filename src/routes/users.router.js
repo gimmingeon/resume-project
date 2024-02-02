@@ -41,22 +41,19 @@ router.post("/sign-up", async (req, res, next) => {
 });
 
 router.post("/sign-in", async (req, res, next) => {
-  // 1. `email`, `password`를 **body**로 전달받습니다.
+
   const { email, password } = req.body;
 
-  // 2. 전달 받은 `email`에 해당하는 사용자가 있는지 확인합니다.
   const user = await prisma.users.findFirst({ where: { email } });
 
   if (!user) {
     return res.status(401).json({ message: "없는 이메일입니다" });
   }
 
-  // 3. 전달 받은 `password`와 데이터베이스의 저장된 `password`를 bcrypt를 이용해 검증합니다.
   if (!(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: "비밀번호가 틀렸습니다" });
   }
 
-  // 사용자에게 jwt를 할당한다
   const token = jwt.sign({ userId: user.userId }, "custom-secret-key", {
     expiresIn: "12h",
   });
@@ -65,12 +62,10 @@ router.post("/sign-in", async (req, res, next) => {
   return res.status(200).json({ message: "로그인되었습니다" });
 });
 
-// 사용자 정보 조회
 router.get("/users", authMiddleware, async (req, res, next) => {
-  // user에서 가져온 userId를 바탕으로 정보를 조회한다
-  const { userId } = req.user;
 
-  // 데이터 조회
+  const { userId } = req.user;
+  
   const user = await prisma.users.findFirst({
     where: { userId: +userId },
     select: {

@@ -24,7 +24,6 @@ router.post("/resume", authMiddleware, async (req, res, next) => {
   }
 
   const resume = await prisma.resume.create({
-    // 생성하는 데이터
     data: {
       userId: +userId,
       title: title,
@@ -37,7 +36,6 @@ router.post("/resume", authMiddleware, async (req, res, next) => {
   return res.status(201).json({ data: resume });
 });
 
-// 이력서 목록 조회
 router.get("/resume", async (req, res, next) => {
   const resume = await prisma.resume.findMany({
     select: {
@@ -56,7 +54,6 @@ router.get("/resume", async (req, res, next) => {
   return res.status(200).json({ data: resume });
 });
 
-// 이력서 상세 조회
 router.get("/resume/:resumeId", async (req, res, next) => {
   const { resumeId } = req.params;
 
@@ -75,7 +72,7 @@ router.get("/resume/:resumeId", async (req, res, next) => {
   return res.status(200).json({ data: resume });
 });
 
-// 이력서 수정 api
+
 router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
   const { title, introduction, status } = req.body;
@@ -104,7 +101,7 @@ router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   return res.status(200).json({ message: "이력서 수정 완료" });
 });
 
-// 이력서 삭제
+
 router.delete("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
 

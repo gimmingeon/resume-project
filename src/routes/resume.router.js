@@ -76,6 +76,7 @@ router.get("/resume/:resumeId", async (req, res, next) => {
 router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
   const { title, introduction, status } = req.body;
+  const {userId} = req.user;
 
   const resume = await prisma.resume.findUnique({
     where: {
@@ -85,6 +86,10 @@ router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
 
   if (!resume) {
     return res.status(404).json({ message: "이력서 조회에 실패하였습니다." });
+  }
+
+  if (resume.user !== +userId) {
+    return res.status(403).json({message: "당신의 이력서가 아닙니다"});
   }
 
   await prisma.resume.update({
@@ -104,6 +109,7 @@ router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
 
 router.delete("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
+  const {userId} = req.user;
 
   const resume = await prisma.resume.findUnique({
     where: {
@@ -113,6 +119,10 @@ router.delete("/resume/:resumeId", authMiddleware, async (req, res, next) => {
 
   if (!resume) {
     return res.status(404).json({ message: "이력서조회에 실패했습니다" });
+  }
+
+  if(resume.resumeId !== +userId) {
+    return res.status(404).json({message: "당신의 이력서가 아닙니다"});
   }
 
   await prisma.resume.delete({

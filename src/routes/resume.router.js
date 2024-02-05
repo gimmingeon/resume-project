@@ -78,6 +78,20 @@ router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
   const { title, introduction, status } = req.body;
   const {userId} = req.user;
 
+  const resumeStatus = status || "APPLY";
+
+  const statusOption = [
+    "APPLY",
+    "DROP",
+    "PASS",
+    "INTERVIEW1",
+    "INTERVIEW2",
+    "FINAL_PASS",
+  ];
+  if (!statusOption.includes(resumeStatus)) {
+    return res.status(400).json({ message: "이력서 상태를 잘못 입력했습니다" });
+  }
+
   const resume = await prisma.resume.findUnique({
     where: {
       resumeId: +resumeId,
@@ -88,7 +102,7 @@ router.put("/resume/:resumeId", authMiddleware, async (req, res, next) => {
     return res.status(404).json({ message: "이력서 조회에 실패하였습니다." });
   }
 
-  if (resume.user !== +userId) {
+  if (resume.userId !== +userId) {
     return res.status(403).json({message: "당신의 이력서가 아닙니다"});
   }
 
@@ -121,7 +135,7 @@ router.delete("/resume/:resumeId", authMiddleware, async (req, res, next) => {
     return res.status(404).json({ message: "이력서조회에 실패했습니다" });
   }
 
-  if(resume.resumeId !== +userId) {
+  if(resume.userId !== +userId) {
     return res.status(404).json({message: "당신의 이력서가 아닙니다"});
   }
 

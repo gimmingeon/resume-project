@@ -58,14 +58,6 @@ router.post("/sign-in", async (req, res, next) => {
 
   const { email, password } = req.body;
 
-  if (!email) {
-    return res.status(400).json({message: "이메일을 적지 않았습니다"});
-  }
-
-  if (!password) {
-    return res.status(400).json({message: "비밀번호를 적지 않았습니다"});
-  }
-
   const user = await prisma.users.findFirst({ where: { email } });
 
   if (!user) {
@@ -76,7 +68,7 @@ router.post("/sign-in", async (req, res, next) => {
     return res.status(401).json({ message: "비밀번호가 틀렸습니다" });
   }
 
-  const token = jwt.sign({ userId: user.userId }, "resume-key", {
+  const token = jwt.sign({ userId: user.userId }, "custom-secret-key", {
     expiresIn: "12h",
   });
 

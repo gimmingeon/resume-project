@@ -33,7 +33,7 @@ router.post("/sign-up", async (req, res, next) => {
     return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
   }
 
-  if (password.length < 8) {
+  if (password.length < 6) {
     return res
       .status(400)
       .json({ message: "비밀번호는 8자리 이상으로 만들어야 합니다" });

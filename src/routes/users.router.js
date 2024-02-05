@@ -76,7 +76,7 @@ router.post("/sign-in", async (req, res, next) => {
     return res.status(401).json({ message: "비밀번호가 틀렸습니다" });
   }
 
-  const token = jwt.sign({ userId: user.userId }, "custom-secret-key", {
+  const token = jwt.sign({ userId: user.userId }, "resume-key", {
     expiresIn: "12h",
   });
 

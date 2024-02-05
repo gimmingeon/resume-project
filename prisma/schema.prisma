@@ -23,7 +23,7 @@ model Users {
 
 model Resume {
   resumeId Int @id @default(autoincrement()) @map("resumeId")
-  userId int @map("userId")
+  userId Int @map("userId")
   title String @map("title")
   introduction String @map("introduction")
   name String @map("name")

@@ -51,9 +51,7 @@ router.post("/sign-up", async (req, res, next) => {
     data: { email, password: hashedPassword, name },
   });
 
-  const info = { ...user, password: undefined };
-
-  return res.status(201).json({ data: info });
+  return res.status(201).json({ email, name });
 });
 
 router.post("/sign-in", async (req, res, next) => {
